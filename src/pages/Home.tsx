@@ -12,7 +12,6 @@ export const Home: FC = () => {
       const inputView = document.getElementById('input-view');
       const resultView = document.getElementById('result-view');
       const resultInputDisplay = document.getElementById('result-input-display');
-      const shareBtn = document.getElementById('share-btn');
       const backBtn = document.getElementById('back-btn');
 
       let imageData = null;
@@ -58,13 +57,6 @@ export const Home: FC = () => {
       backBtn.addEventListener('click', () => {
         resetInput();
         showInputView();
-      });
-
-      shareBtn.addEventListener('click', () => {
-        const text = '趣を見出しました #趣';
-        const url = window.location.href;
-        const tweetUrl = \`https://twitter.com/intent/tweet?text=\${encodeURIComponent(text)}&url=\${encodeURIComponent(url)}\`;
-        window.open(tweetUrl, '_blank', 'width=550,height=420');
       });
 
       // Drag & Drop
@@ -345,9 +337,6 @@ export const Home: FC = () => {
             <div id="result-input-display" class="result-input-display" />
             <div id="output-content" class="output-content" />
             <div class="result-actions">
-              <button id="share-btn" class="share-btn">
-                シェアする
-              </button>
               <button id="back-btn" class="back-btn">
                 もう一度試す
               </button>

@@ -523,25 +523,6 @@ body::before {
   border-top: 1px solid rgba(45, 45, 45, 0.1);
 }
 
-.share-btn {
-  padding: 0.875rem 2rem;
-  font-family: var(--font-mincho);
-  font-size: 0.9rem;
-  letter-spacing: 0.2em;
-  color: var(--kinari);
-  background: var(--shu);
-  border: none;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.share-btn:hover {
-  background: var(--shu-dark);
-  box-shadow: var(--shadow-ink-hover);
-  transform: translateY(-1px);
-}
-
 .back-btn {
   padding: 0.875rem 2rem;
   font-family: var(--font-mincho);
@@ -585,7 +566,6 @@ body::before {
     gap: 0.75rem;
   }
 
-  .share-btn,
   .back-btn {
     width: 100%;
     text-align: center;

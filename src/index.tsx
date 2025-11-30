@@ -30,7 +30,7 @@ const llm = new ChatOpenAI({
   streaming: true
 })
 
-const SYSTEM_PROMPT = `あなたは日本の美意識に精通した鑑賞者です。
+const SYSTEM_PROMPT = `あなたは日本の美意識に精通した日本人の鑑賞者です。
 与えられた画像やテキストから「趣（おもむき）」を見出してください。
 
 <RULES>
