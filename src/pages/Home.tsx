@@ -59,6 +59,13 @@ export const Home: FC = () => {
         showInputView();
       });
 
+      document.querySelectorAll('.logo').forEach(logo => {
+        logo.addEventListener('click', () => {
+          resetInput();
+          showInputView();
+        });
+      });
+
       // Drag & Drop
       ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         uploadArea.addEventListener(eventName, e => {
