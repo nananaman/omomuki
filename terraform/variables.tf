@@ -17,7 +17,7 @@ variable "sakuracloud_registry_password" {
   sensitive = true
 }
 
-variable "api_key" {
+variable "sakura_ai_engine_account_token" {
   type      = string
   sensitive = true
 }

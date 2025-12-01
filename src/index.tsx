@@ -9,6 +9,14 @@ import { Home } from './pages/Home.js'
 
 const app = new Hono()
 
+const log = (ip: string, message: string, extra?: Record<string, unknown>) => {
+  console.log(JSON.stringify({ date: new Date().toISOString(), ip, message, ...extra }))
+}
+
+const logError = (ip: string, message: string, extra?: Record<string, unknown>) => {
+  console.error(JSON.stringify({ date: new Date().toISOString(), ip, message, ...extra }))
+}
+
 app.get('/styles/*', serveStatic({ root: './src' }))
 
 app.get('/', (c) => {
@@ -134,7 +142,7 @@ type StreamRequest = {
 
 const rateLimiter = rateLimit({
   windowMs: 60 * 1000,
-  max: 10,
+  max: 30,
   message: 'リクエスト制限を超えました。しばらくお待ちください。'
 })
 
@@ -142,7 +150,11 @@ app.post('/api/stream', rateLimiter, async (c) => {
   const body = await c.req.json<StreamRequest>()
   const { text, imageUrl } = body
 
+  const ip = c.req.header('x-forwarded-for') ?? 'unknown'
+  log(ip, 'POST /api/stream', { text: text ?? null, hasImage: !!imageUrl })
+
   if (!text && !imageUrl) {
+    logError(ip, 'text or imageUrl is required')
     return c.json({ error: 'text or imageUrl is required' }, 400)
   }
 
@@ -163,13 +175,24 @@ app.post('/api/stream', rateLimiter, async (c) => {
     new HumanMessage({ content })
   ]
 
+  const startTime = Date.now()
   return streamSSE(c, async (stream) => {
-    const response = await llm.stream(messages)
-    for await (const chunk of response) {
-      const text = chunk.content as string
-      if (text) {
-        await stream.writeSSE({ data: text })
+    log(ip, 'LLM request start')
+    try {
+      const response = await llm.stream(messages)
+      for await (const chunk of response) {
+        const text = chunk.content as string
+        if (text) {
+          await stream.writeSSE({ data: text })
+        }
       }
+      log(ip, 'LLM request complete')
+    } catch (error) {
+      logError(ip, 'LLM Error', { error: String(error) })
+      throw error
+    } finally {
+      const duration = Date.now() - startTime
+      log(ip, 'Request complete', { durationMs: duration })
     }
   })
 })

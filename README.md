@@ -21,8 +21,8 @@ open http://localhost:3000
 ### Docker ビルド
 
 ```bash
-docker build -t omomuki .
-docker run --rm -p 3000:3000 -e API_KEY=your_key omomuki
+docker build --platform linux/amd64 -t omomuki .
+docker run -p 3000:3000 -e API_KEY=your_key omomuki
 ```
 
 ### さくらのクラウドへのデプロイ

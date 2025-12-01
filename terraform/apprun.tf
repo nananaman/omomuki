@@ -8,7 +8,7 @@ resource "sakuracloud_apprun_application" "app" {
   components {
     name       = "app"
     max_cpu    = "1"
-    max_memory = "256Mi"
+    max_memory = "512Mi"
 
     deploy_source {
       container_registry {
@@ -21,7 +21,7 @@ resource "sakuracloud_apprun_application" "app" {
 
     env {
       key   = "API_KEY"
-      value = var.api_key
+      value = var.sakura_ai_engine_account_token
     }
   }
 
