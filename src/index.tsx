@@ -4,6 +4,7 @@ import { HumanMessage, SystemMessage } from '@langchain/core/messages'
 import { ChatOpenAI } from '@langchain/openai'
 import { Hono } from 'hono'
 import { streamSSE } from 'hono/streaming'
+import { rateLimit } from './middleware/rate-limit.js'
 import { Home } from './pages/Home.js'
 
 const app = new Hono()
@@ -131,7 +132,13 @@ type StreamRequest = {
   imageUrl?: string
 }
 
-app.post('/api/stream', async (c) => {
+const rateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  message: 'リクエスト制限を超えました。しばらくお待ちください。'
+})
+
+app.post('/api/stream', rateLimiter, async (c) => {
   const body = await c.req.json<StreamRequest>()
   const { text, imageUrl } = body
 

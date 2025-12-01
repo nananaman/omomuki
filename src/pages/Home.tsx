@@ -120,6 +120,12 @@ export const Home: FC = () => {
       });
 
       if (!response.ok) {
+        if (response.status === 429) {
+          const data = await response.json();
+          const retryAfter = response.headers.get('Retry-After') || '60';
+          showRateLimitModal(data.error, parseInt(retryAfter, 10));
+          return;
+        }
         throw new Error('API error');
       }
 
@@ -293,6 +299,76 @@ export const Home: FC = () => {
 
   backBtn.addEventListener('click', reset);
   logo.addEventListener('click', reset);
+
+  // Rate limit modal
+  function showRateLimitModal(message, retryAfterSeconds) {
+    let remaining = retryAfterSeconds;
+    const total = retryAfterSeconds;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'rate-limit-overlay';
+    overlay.innerHTML = \`
+      <div class="rate-limit-modal">
+        <div class="rate-limit-icon">間</div>
+        <h2 class="rate-limit-title">しばしお待ちを</h2>
+        <p class="rate-limit-message">\${escapeHtml(message)}</p>
+        <div class="rate-limit-timer">
+          <span>再開まで</span>
+          <span class="rate-limit-timer-value">\${remaining}</span>
+          <span>秒</span>
+        </div>
+        <div class="rate-limit-progress">
+          <div class="rate-limit-progress-bar" style="width: 0%"></div>
+        </div>
+        <button class="rate-limit-close">閉じる</button>
+        <div class="rate-limit-haiku">
+          <p>急がずに<br>流れに身を任せれば<br>道は開ける</p>
+        </div>
+      </div>
+    \`;
+
+    document.body.appendChild(overlay);
+
+    const timerValue = overlay.querySelector('.rate-limit-timer-value');
+    const progressBar = overlay.querySelector('.rate-limit-progress-bar');
+    const closeBtn = overlay.querySelector('.rate-limit-close');
+
+    const interval = setInterval(() => {
+      remaining--;
+      if (timerValue) {
+        timerValue.textContent = remaining;
+      }
+      if (progressBar) {
+        const progress = ((total - remaining) / total) * 100;
+        progressBar.style.width = progress + '%';
+      }
+      if (remaining <= 0) {
+        clearInterval(interval);
+        closeRateLimitModal(overlay);
+      }
+    }, 1000);
+
+    closeBtn.addEventListener('click', () => {
+      clearInterval(interval);
+      closeRateLimitModal(overlay);
+    });
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        clearInterval(interval);
+        closeRateLimitModal(overlay);
+      }
+    });
+
+    showInputView();
+  }
+
+  function closeRateLimitModal(overlay) {
+    overlay.style.animation = 'fadeIn 0.3s ease reverse';
+    setTimeout(() => {
+      overlay.remove();
+    }, 300);
+  }
 })();
 `
 

@@ -713,3 +713,158 @@ button:focus-visible {
   background-color: var(--shu-light);
   color: var(--sumi);
 }
+
+/* レート制限エラー表示 */
+.rate-limit-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 26, 26, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn var(--duration-normal) var(--ease-out-expo);
+}
+
+.rate-limit-modal {
+  background: var(--washi);
+  max-width: 400px;
+  width: calc(100% - var(--space-lg));
+  padding: var(--space-xl) var(--space-lg);
+  border-radius: 4px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn var(--duration-slow) var(--ease-out-expo);
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.rate-limit-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--shu), transparent);
+}
+
+.rate-limit-icon {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  color: var(--shu);
+  opacity: 0.6;
+  margin-bottom: var(--space-md);
+  animation: breathe 3s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+.rate-limit-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--sumi);
+  margin-bottom: var(--space-xs);
+  letter-spacing: 0.1em;
+}
+
+.rate-limit-message {
+  font-size: 0.9375rem;
+  color: var(--sumi-light);
+  line-height: 1.8;
+  margin-bottom: var(--space-md);
+  font-weight: 300;
+}
+
+.rate-limit-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  color: var(--sumi-faded);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--washi-warm);
+  border-radius: 2px;
+  margin-bottom: var(--space-lg);
+}
+
+.rate-limit-timer-value {
+  font-weight: 600;
+  color: var(--shu);
+  min-width: 2ch;
+  text-align: center;
+}
+
+.rate-limit-progress {
+  width: 100%;
+  height: 2px;
+  background: var(--kinari-dark);
+  border-radius: 1px;
+  overflow: hidden;
+  margin-bottom: var(--space-md);
+}
+
+.rate-limit-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--shu-deep), var(--shu));
+  border-radius: 1px;
+  transition: width 1s linear;
+}
+
+.rate-limit-close {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--sumi-faded);
+  background: none;
+  border: 1px solid var(--kinari-dark);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out-quad);
+  letter-spacing: 0.05em;
+}
+
+.rate-limit-close:hover {
+  color: var(--sumi);
+  border-color: var(--sumi-faded);
+  background: var(--washi-warm);
+}
+
+.rate-limit-haiku {
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--kinari-dark);
+}
+
+.rate-limit-haiku p {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  color: var(--sumi-faded);
+  line-height: 2.2;
+  letter-spacing: 0.15em;
+}
