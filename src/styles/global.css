@@ -1,18 +1,50 @@
-:root {
-  --sumi: #2D2D2D;
-  --sumi-light: #4A4A4A;
-  --kinari: #F5F1EB;
-  --kinari-dark: #E8E2D9;
-  --usuzumi: #8B8B8B;
-  --shu: #C53D43;
-  --shu-dark: #A32E33;
-  --ai: #264348;
-  --matcha: #6B7B4C;
-  --fuji: #8B7BAA;
-  --kitsune: #C4A35A;
+@import url('https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap');
 
-  --font-mincho: 'Shippori Mincho', 'Noto Serif JP', serif;
-  --font-body: 'Noto Serif JP', serif;
+:root {
+  /* 墨色のグラデーション */
+  --sumi-deep: #1a1a1a;
+  --sumi: #2d2926;
+  --sumi-light: #4a4543;
+  --sumi-faded: #6b6562;
+
+  /* 和紙・絹の色 */
+  --washi: #faf8f5;
+  --washi-warm: #f5f2ed;
+  --kinari: #ebe7e0;
+  --kinari-dark: #d9d4ca;
+
+  /* アクセント - 朱・緋 */
+  --shu: #c94a4a;
+  --shu-deep: #a63d3d;
+  --shu-light: rgba(201, 74, 74, 0.1);
+
+  /* 趣の四色 - より洗練されたトーン */
+  --wabi: #7a8c65;      /* 侘び寂び - 苔色 */
+  --wabi-bg: rgba(122, 140, 101, 0.08);
+  --yugen: #7d6b8a;     /* 幽玄 - 紫鼠 */
+  --yugen-bg: rgba(125, 107, 138, 0.08);
+  --aware: #5a7a7d;     /* もののあはれ - 錆浅葱 */
+  --aware-bg: rgba(90, 122, 125, 0.08);
+  --fuga: #a68c5b;      /* 風雅 - 黄土 */
+  --fuga-bg: rgba(166, 140, 91, 0.08);
+
+  /* タイポグラフィ */
+  --font-display: 'Zen Old Mincho', serif;
+  --font-body: 'Noto Sans JP', sans-serif;
+
+  /* スペーシング */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+
+  /* トランジション */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --duration-fast: 0.2s;
+  --duration-normal: 0.4s;
+  --duration-slow: 0.8s;
 }
 
 * {
@@ -21,85 +53,149 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-body);
-  background-color: var(--kinari);
+  font-weight: 400;
+  background-color: var(--washi);
   color: var(--sumi);
   min-height: 100vh;
   line-height: 1.8;
+  letter-spacing: 0.02em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* 和紙テクスチャ風の微細なノイズ */
+  background-image:
+    radial-gradient(ellipse at 20% 30%, rgba(201, 74, 74, 0.02) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(45, 41, 38, 0.02) 0%, transparent 50%);
 }
 
+/* コンテナ */
 .container {
-  max-width: 800px;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: var(--space-xl) var(--space-md);
   min-height: 100vh;
-}
-
-/* Header */
-.header {
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.logo {
-  font-family: var(--font-mincho);
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: var(--sumi);
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  display: inline-block;
   position: relative;
 }
 
-.logo::after {
+/* ヘッダー */
+.header {
+  text-align: center;
+  margin-bottom: var(--space-sm);
+  position: relative;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 8vw, 3rem);
+  font-weight: 700;
+  color: var(--sumi);
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: color var(--duration-normal) var(--ease-out-expo);
+  padding: 0 var(--space-xs);
+}
+
+.logo::before {
   content: '';
   position: absolute;
-  bottom: -8px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 60%;
+  width: 0;
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--shu), transparent);
+  transition: width var(--duration-slow) var(--ease-out-expo);
+}
+
+.logo:hover::before {
+  width: 100%;
+}
+
+.logo::after {
+  content: '趣';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 6rem;
+  color: var(--shu);
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .subtitle {
   text-align: center;
-  color: var(--usuzumi);
-  font-size: 0.95rem;
-  margin-bottom: 2.5rem;
+  color: var(--sumi-faded);
+  font-size: 0.875rem;
+  font-weight: 300;
+  margin-bottom: var(--space-xl);
+  letter-spacing: 0.1em;
 }
 
-/* Input Section */
+/* 入力セクション */
 .input-section {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--space-md);
 }
 
-/* Tabs */
+/* タブ */
 .tabs {
   display: flex;
-  gap: 0;
-  border-bottom: 1px solid var(--kinari-dark);
+  gap: var(--space-xs);
+  position: relative;
+  padding-bottom: 1px;
+}
+
+.tabs::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--kinari-dark), transparent);
 }
 
 .tab {
   flex: 1;
-  padding: 0.75rem 1rem;
+  padding: var(--space-sm) var(--space-md);
   font-family: var(--font-body);
-  font-size: 0.95rem;
-  color: var(--usuzumi);
-  background: none;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--sumi-faded);
+  background: transparent;
   border: none;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--duration-normal) var(--ease-out-expo);
   position: relative;
+  letter-spacing: 0.05em;
+}
+
+.tab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background-color: var(--shu);
+  transition: width var(--duration-normal) var(--ease-out-expo);
 }
 
 .tab:hover {
-  color: var(--sumi);
+  color: var(--sumi-light);
 }
 
 .tab.active {
@@ -108,103 +204,138 @@ body {
 }
 
 .tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: var(--shu);
+  width: 40%;
 }
 
 .tab-content {
   display: none;
+  animation: fadeIn var(--duration-normal) var(--ease-out-expo);
 }
 
 .tab-content.active {
   display: block;
 }
 
+/* テキストエリア */
 .tab-content .textarea,
 .tab-content .upload-area {
-  min-height: 160px;
+  height: 200px;
+  min-height: 200px;
 }
 
 .textarea {
   width: 100%;
-  padding: 1rem;
+  height: 200px;
+  padding: var(--space-md);
   font-family: var(--font-body);
   font-size: 1rem;
-  border: 1px solid var(--kinari-dark);
-  border-radius: 8px;
-  background-color: #fff;
+  font-weight: 300;
+  line-height: 2;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: var(--washi-warm);
   color: var(--sumi);
-  resize: vertical;
-  min-height: 120px;
-  transition: border-color 0.2s;
+  resize: none;
+  transition: all var(--duration-normal) var(--ease-out-expo);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
 .textarea:focus {
   outline: none;
-  border-color: var(--shu);
+  background-color: #fff;
+  border-color: var(--kinari-dark);
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.01),
+    0 0 0 4px var(--shu-light);
 }
 
 .textarea::placeholder {
-  color: var(--usuzumi);
+  color: var(--sumi-faded);
+  font-weight: 300;
 }
 
-/* Upload Area */
+/* アップロードエリア */
 .upload-area {
-  border: 2px dashed var(--kinari-dark);
-  border-radius: 8px;
-  padding: 1rem;
+  height: 200px;
+  border: 1px dashed var(--kinari-dark);
+  border-radius: 4px;
+  padding: var(--space-lg);
   text-align: center;
   cursor: pointer;
-  transition: all 0.2s;
-  background-color: #fff;
+  transition: all var(--duration-normal) var(--ease-out-expo);
+  background-color: var(--washi-warm);
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+.upload-area::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, var(--shu-light) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-out-expo);
 }
 
 .upload-area:hover,
 .upload-area.drag-over {
   border-color: var(--shu);
-  background-color: rgba(197, 61, 67, 0.03);
+  background-color: #fff;
+}
+
+.upload-area:hover::before,
+.upload-area.drag-over::before {
+  opacity: 1;
 }
 
 .upload-area.has-image {
   border-style: solid;
+  border-color: var(--kinari-dark);
+  padding: var(--space-sm);
 }
 
-.upload-area.has-image:hover {
-  background-color: #fff;
+.upload-area.has-image::before {
+  display: none;
 }
 
 .upload-icon {
-  font-size: 2rem;
-  color: var(--usuzumi);
-  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  color: var(--sumi-faded);
+  margin-bottom: var(--space-xs);
+  position: relative;
+  z-index: 1;
+  transition: transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.upload-area:hover .upload-icon {
+  transform: translateY(-2px);
 }
 
 .upload-text {
   color: var(--sumi-light);
-  font-size: 0.95rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  position: relative;
+  z-index: 1;
 }
 
 .upload-hint {
-  color: var(--usuzumi);
-  font-size: 0.8rem;
-  margin-top: 0.25rem;
+  color: var(--sumi-faded);
+  font-size: 0.75rem;
+  margin-top: var(--space-xs);
+  position: relative;
+  z-index: 1;
 }
 
 #file-input {
   display: none;
 }
 
-/* Image Preview (inside upload area) */
+/* 画像プレビュー */
 .preview-container {
   position: relative;
   display: inline-block;
@@ -212,216 +343,302 @@ body {
 
 .preview-image {
   max-width: 100%;
-  max-height: 300px;
-  border-radius: 6px;
+  max-height: 280px;
+  border-radius: 2px;
   display: block;
 }
 
 .remove-image {
   position: absolute;
-  top: -10px;
-  right: -10px;
-  width: 28px;
-  height: 28px;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background-color: var(--sumi);
   color: #fff;
-  border: none;
+  border: 2px solid var(--washi);
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
+  transition: all var(--duration-fast) var(--ease-out-quad);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .remove-image:hover {
   background-color: var(--shu);
+  transform: scale(1.1);
 }
 
-/* Submit Button */
+/* 送信ボタン */
 .submit-btn {
   width: 100%;
-  padding: 1rem 2rem;
-  font-family: var(--font-mincho);
-  font-size: 1.1rem;
+  padding: var(--space-md) var(--space-lg);
+  font-family: var(--font-display);
+  font-size: 1rem;
   font-weight: 500;
-  color: #fff;
-  background-color: var(--sumi);
+  color: var(--washi);
+  background: linear-gradient(135deg, var(--sumi) 0%, var(--sumi-light) 100%);
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.2s;
-  letter-spacing: 0.1em;
+  transition: all var(--duration-normal) var(--ease-out-expo);
+  letter-spacing: 0.15em;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--shu) 0%, var(--shu-deep) 100%);
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-out-expo);
+  z-index: 0;
+}
+
+.submit-btn span {
+  position: relative;
+  z-index: 1;
+}
+
+.submit-btn:hover:not(:disabled)::before {
+  opacity: 1;
 }
 
 .submit-btn:hover:not(:disabled) {
-  background-color: var(--shu);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(45, 41, 38, 0.2);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .submit-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
-/* Result View */
+/* 結果ビュー */
 .result-view {
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn var(--duration-slow) var(--ease-out-expo);
 }
 
 .back-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  color: var(--usuzumi);
-  font-size: 0.9rem;
+  gap: var(--space-xs);
+  color: var(--sumi-faded);
+  font-size: 0.8125rem;
+  font-weight: 400;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.5rem 0;
-  margin-bottom: 1.5rem;
-  transition: color 0.2s;
+  padding: var(--space-xs) 0;
+  margin-bottom: var(--space-lg);
+  transition: all var(--duration-fast) var(--ease-out-quad);
+  letter-spacing: 0.02em;
 }
 
 .back-btn:hover {
   color: var(--sumi);
+  transform: translateX(-4px);
 }
 
-/* Input Display */
+/* 入力表示 */
 .input-display {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: var(--space-xl);
+  position: relative;
 }
 
-.input-display-text {
-  display: inline-block;
-  font-family: var(--font-mincho);
-  font-size: 1.05rem;
-  color: var(--sumi-light);
-  line-height: 1.9;
-  padding: 1rem 0;
-  max-width: 100%;
-}
-
-.input-display-text::before,
-.input-display-text::after {
+.input-display::before,
+.input-display::after {
   content: '';
   display: block;
-  width: 60px;
+  width: 80px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--shu), transparent);
+  background: linear-gradient(90deg, transparent, var(--kinari-dark), transparent);
   margin: 0 auto;
 }
 
-.input-display-text::before {
-  margin-bottom: 0.75rem;
+.input-display::before {
+  margin-bottom: var(--space-md);
 }
 
-.input-display-text::after {
-  margin-top: 0.75rem;
+.input-display::after {
+  margin-top: var(--space-md);
+}
+
+.input-display-text {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: var(--sumi-light);
+  line-height: 2;
+  padding: var(--space-sm) 0;
 }
 
 .input-display-image {
   max-width: 100%;
-  max-height: 280px;
+  max-height: 240px;
   border-radius: 2px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid var(--kinari-dark);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* Summary */
+/* サマリー */
 .summary-section {
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md);
+  background: linear-gradient(135deg, var(--washi-warm) 0%, var(--washi) 100%);
+  border-radius: 4px;
+  border-left: 2px solid var(--shu);
 }
 
 .summary-label {
-  font-size: 0.85rem;
-  color: var(--usuzumi);
-  margin-bottom: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--shu);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: var(--space-xs);
 }
 
 .summary-text {
-  font-size: 1.1rem;
-  line-height: 1.9;
+  font-size: 1rem;
+  line-height: 2;
   color: var(--sumi);
+  font-weight: 300;
 }
 
 .summary-text.loading::after {
   content: '|';
+  color: var(--shu);
   animation: blink 0.8s infinite;
+  margin-left: 2px;
 }
 
-/* Omomuki Cards */
+/* 趣カード */
 .omomuki-section {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-sm);
 }
 
 .omomuki-card {
-  padding: 1.25rem 1.5rem;
-  border-radius: 8px;
-  animation: fadeInUp 0.4s ease;
+  padding: var(--space-md) var(--space-md) var(--space-md) var(--space-lg);
+  border-radius: 4px;
+  position: relative;
+  animation: slideInUp var(--duration-normal) var(--ease-out-expo) both;
+}
+
+.omomuki-card:nth-child(1) { animation-delay: 0.1s; }
+.omomuki-card:nth-child(2) { animation-delay: 0.2s; }
+.omomuki-card:nth-child(3) { animation-delay: 0.3s; }
+.omomuki-card:nth-child(4) { animation-delay: 0.4s; }
+.omomuki-card:nth-child(5) { animation-delay: 0.5s; }
+
+.omomuki-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 3px 0 0 3px;
 }
 
 .omomuki-card.in-progress {
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 .omomuki-card[data-type="侘び寂び"] {
-  background: rgba(107, 123, 76, 0.1);
-  border-left: 3px solid var(--matcha);
+  background: var(--wabi-bg);
+}
+.omomuki-card[data-type="侘び寂び"]::before {
+  background: linear-gradient(180deg, var(--wabi), transparent);
 }
 
 .omomuki-card[data-type="幽玄"] {
-  background: rgba(139, 123, 170, 0.1);
-  border-left: 3px solid var(--fuji);
+  background: var(--yugen-bg);
+}
+.omomuki-card[data-type="幽玄"]::before {
+  background: linear-gradient(180deg, var(--yugen), transparent);
 }
 
 .omomuki-card[data-type="もののあはれ"] {
-  background: rgba(38, 67, 72, 0.1);
-  border-left: 3px solid var(--ai);
+  background: var(--aware-bg);
+}
+.omomuki-card[data-type="もののあはれ"]::before {
+  background: linear-gradient(180deg, var(--aware), transparent);
 }
 
 .omomuki-card[data-type="風雅"] {
-  background: rgba(196, 163, 90, 0.1);
-  border-left: 3px solid var(--kitsune);
+  background: var(--fuga-bg);
+}
+.omomuki-card[data-type="風雅"]::before {
+  background: linear-gradient(180deg, var(--fuga), transparent);
 }
 
 .omomuki-target {
-  font-family: var(--font-mincho);
-  font-size: 1.05rem;
-  font-weight: 500;
-  margin-bottom: 0.25rem;
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--sumi);
+  margin-bottom: 2px;
+  letter-spacing: 0.05em;
 }
 
 .omomuki-type {
-  font-size: 0.8rem;
-  color: var(--usuzumi);
-  margin-bottom: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: var(--space-xs);
+  opacity: 0.7;
 }
+
+.omomuki-card[data-type="侘び寂び"] .omomuki-type { color: var(--wabi); }
+.omomuki-card[data-type="幽玄"] .omomuki-type { color: var(--yugen); }
+.omomuki-card[data-type="もののあはれ"] .omomuki-type { color: var(--aware); }
+.omomuki-card[data-type="風雅"] .omomuki-type { color: var(--fuga); }
 
 .omomuki-reasoning {
-  font-size: 0.95rem;
+  font-size: 0.9375rem;
   color: var(--sumi-light);
-  line-height: 1.7;
+  line-height: 1.9;
+  font-weight: 300;
 }
 
-/* Hidden */
+.loading-cursor {
+  color: var(--shu);
+  animation: blink 0.8s infinite;
+}
+
+/* 非表示 */
 .hidden {
   display: none !important;
 }
 
-/* Animations */
+/* アニメーション */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -430,30 +647,69 @@ body {
 }
 
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
-/* Responsive */
+/* レスポンシブ */
 @media (max-width: 640px) {
   .container {
-    padding: 1.5rem 1rem;
+    padding: var(--space-lg) var(--space-sm);
   }
 
   .logo {
-    font-size: 2rem;
+    letter-spacing: 0.1em;
+  }
+
+  .logo::after {
+    font-size: 4rem;
   }
 
   .subtitle {
-    font-size: 0.85rem;
+    font-size: 0.8125rem;
+    margin-bottom: var(--space-lg);
   }
 
-  .upload-area {
-    padding: 1.5rem;
+  .tabs {
+    gap: 0;
   }
+
+  .tab {
+    padding: var(--space-sm);
+    font-size: 0.8125rem;
+  }
+
+  .textarea,
+  .upload-area {
+    padding: var(--space-sm);
+  }
+
+  .submit-btn {
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.9375rem;
+  }
+
+  .omomuki-card {
+    padding: var(--space-sm) var(--space-sm) var(--space-sm) var(--space-md);
+  }
+
+  .summary-section {
+    padding: var(--space-sm);
+  }
+}
+
+/* フォーカス可視性（アクセシビリティ） */
+:focus-visible {
+  outline: 2px solid var(--shu);
+  outline-offset: 2px;
+}
+
+button:focus-visible {
+  outline-offset: 4px;
+}
+
+/* 選択スタイル */
+::selection {
+  background-color: var(--shu-light);
+  color: var(--sumi);
 }

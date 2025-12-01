@@ -272,7 +272,7 @@ export const Home: FC = () => {
     // 入力内容を表示
     if (activeTab === 'text') {
       const text = textarea.value.trim();
-      inputDisplay.innerHTML = '<span class="input-display-text">「' + escapeHtml(text) + '」</span>';
+      inputDisplay.innerHTML = '<span class="input-display-text">' + escapeHtml(text) + '</span>';
     } else {
       inputDisplay.innerHTML = '<img src="' + imageData + '" alt="入力画像" class="input-display-image" />';
     }
@@ -330,7 +330,7 @@ export const Home: FC = () => {
               <input type="file" id="file-input" accept="image/*" />
             </div>
 
-            <button id="submit-btn" class="submit-btn">趣を検出する</button>
+            <button id="submit-btn" class="submit-btn"><span>趣を検出する</span></button>
           </section>
         </div>
 
