@@ -1,0 +1,6 @@
+sakuracloud_access_key_id     = ""
+sakuracloud_access_key_secret = ""
+sakuracloud_registry_user     = ""
+sakuracloud_registry_password = ""
+api_key                       = ""
+container_registry_name       = ""

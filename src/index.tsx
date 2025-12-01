@@ -14,10 +14,8 @@ app.get('/', (c) => {
   return c.html(<Home />)
 })
 
-// const API_KEY = process.env.API_KEY
-const API_KEY = 'df4c6ae0-f269-41ce-a44d-e830b72c2323:Q2Mn0VZj+pErJ4ZHVk1ss2kKvrh0UTztB2HRIxwk'
+const API_KEY = process.env.API_KEY
 const SAKURA_API_ENDPOINT = 'https://api.ai.sakura.ad.jp/v1/'
-// const MODEL_NAME = 'preview/Qwen3-VL-30B-A3B-Instruct'
 const MODEL_NAME = 'preview/Phi-4-multimodal-instruct'
 
 const llm = new ChatOpenAI({

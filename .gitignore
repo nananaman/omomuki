@@ -28,3 +28,9 @@ lerna-debug.log*
 .DS_Store
 
 dist/
+
+# terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/terraform.tfvars
