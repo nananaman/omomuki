@@ -16,7 +16,7 @@ app.get('/', (c) => {
 
 const API_KEY = process.env.API_KEY
 const SAKURA_API_ENDPOINT = 'https://api.ai.sakura.ad.jp/v1/'
-const MODEL_NAME = 'preview/Phi-4-multimodal-instruct'
+const MODEL_NAME = 'preview/Qwen3-VL-30B-A3B-Instruct'
 
 const llm = new ChatOpenAI({
   model: MODEL_NAME,
@@ -30,6 +30,13 @@ const llm = new ChatOpenAI({
 
 const SYSTEM_PROMPT = `あなたは日本の美意識に精通した日本人の鑑賞者です。
 与えられた画像やテキストから「趣（おもむき）」を見出してください。
+
+<INSTRUCTIONS>
+1. 入力を解釈し、その情景や状況を情緒豊かに表現したサマリを書く
+2. そのサマリにどのような要素や特徴があるか分析する
+3. 各要素や特徴について、趣があるかどうかを判断する
+4. 趣があると判断した要素や特徴について、どのような趣があるかをわかりやすく表現する
+</INSTRUCTIONS>
 
 <RULES>
 - 文章は**日本語で**出力する

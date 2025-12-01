@@ -2,7 +2,7 @@ import type { FC, PropsWithChildren } from 'hono/jsx'
 
 export const Layout: FC<PropsWithChildren<{ title?: string }>> = ({
   children,
-  title = '趣 - おもむき'
+  title = '趣ディテクター'
 }) => {
   return (
     <html lang="ja">
