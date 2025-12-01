@@ -20,6 +20,7 @@ export const Home: FC = () => {
 
   let imageData = null;
   let activeTab = 'text';
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
   // Tab switching
   tabs.forEach(tab => {
@@ -66,6 +67,10 @@ export const Home: FC = () => {
   });
 
   function handleFile(file) {
+    if (file.size > MAX_FILE_SIZE) {
+      alert('画像サイズが大きすぎます（5MB以内にしてください）');
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (e) => {
       imageData = e.target.result;

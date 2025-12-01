@@ -2,12 +2,22 @@ import { serve } from '@hono/node-server'
 import { serveStatic } from '@hono/node-server/serve-static'
 import { HumanMessage, SystemMessage } from '@langchain/core/messages'
 import { ChatOpenAI } from '@langchain/openai'
-import { Hono } from 'hono'
+import { Hono, type Context } from 'hono'
 import { streamSSE } from 'hono/streaming'
+import { bodyLimit } from 'hono/body-limit'
+import { getConnInfo } from '@hono/node-server/conninfo'
 import { rateLimit } from './middleware/rate-limit.js'
 import { Home } from './pages/Home.js'
 
 const app = new Hono()
+
+const MAX_TEXT_LENGTH = 1000
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB (Base64)
+
+const getClientIp = (c: Context): string => {
+  const connInfo = getConnInfo(c)
+  return connInfo.remote.address ?? 'unknown'
+}
 
 const log = (ip: string, message: string, extra?: Record<string, unknown>) => {
   console.log(JSON.stringify({ date: new Date().toISOString(), ip, message, ...extra }))
@@ -146,16 +156,31 @@ const rateLimiter = rateLimit({
   message: 'リクエスト制限を超えました。しばらくお待ちください。'
 })
 
-app.post('/api/stream', rateLimiter, async (c) => {
+const streamBodyLimit = bodyLimit({
+  maxSize: 10 * 1024 * 1024, // 10MB
+  onError: (c) => c.json({ error: 'リクエストサイズが大きすぎます' }, 413)
+})
+
+app.post('/api/stream', streamBodyLimit, rateLimiter, async (c) => {
   const body = await c.req.json<StreamRequest>()
   const { text, imageUrl } = body
 
-  const ip = c.req.header('x-forwarded-for') ?? 'unknown'
-  log(ip, 'POST /api/stream', { text: text ?? null, hasImage: !!imageUrl })
+  const ip = getClientIp(c)
+  log(ip, 'POST /api/stream', { text: text?.slice(0, 100) ?? null, hasImage: !!imageUrl })
 
   if (!text && !imageUrl) {
     logError(ip, 'text or imageUrl is required')
     return c.json({ error: 'text or imageUrl is required' }, 400)
+  }
+
+  if (text && text.length > MAX_TEXT_LENGTH) {
+    logError(ip, 'text too long', { length: text.length })
+    return c.json({ error: `テキストは${MAX_TEXT_LENGTH}文字以内にしてください` }, 400)
+  }
+
+  if (imageUrl && imageUrl.length > MAX_IMAGE_SIZE) {
+    logError(ip, 'image too large', { size: imageUrl.length })
+    return c.json({ error: '画像サイズが大きすぎます（5MB以内）' }, 400)
   }
 
   const content: Array<

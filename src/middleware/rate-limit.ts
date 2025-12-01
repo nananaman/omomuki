@@ -48,11 +48,13 @@ export const rateLimit = (options: RateLimitOptions): MiddlewareHandler => {
     entry.count++
     store.set(key, entry)
 
+    const retryAfter = Math.ceil((entry.resetTime - now) / 1000)
     c.header('X-RateLimit-Limit', max.toString())
     c.header('X-RateLimit-Remaining', Math.max(0, max - entry.count).toString())
     c.header('X-RateLimit-Reset', Math.ceil(entry.resetTime / 1000).toString())
 
     if (entry.count > max) {
+      c.header('Retry-After', retryAfter.toString())
       return c.json({ error: message }, 429)
     }
 
