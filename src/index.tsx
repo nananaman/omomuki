@@ -165,12 +165,19 @@ app.post('/api/stream', streamBodyLimit, rateLimiter, async (c) => {
   const body = await c.req.json<StreamRequest>()
   const { text, imageUrl } = body
 
+  // ログ
   const ip = getClientIp(c)
   log(ip, 'POST /api/stream', { text: text?.slice(0, 100) ?? null, hasImage: !!imageUrl })
 
   if (!text && !imageUrl) {
     logError(ip, 'text or imageUrl is required')
     return c.json({ error: 'text or imageUrl is required' }, 400)
+  }
+
+  // validation
+  if (text && imageUrl) {
+    logError(ip, 'text and imageUrl cannot be both specified')
+    return c.json({ error: 'テキストと画像は同時に指定できません' }, 400)
   }
 
   if (text && text.length > MAX_TEXT_LENGTH) {
@@ -183,23 +190,17 @@ app.post('/api/stream', streamBodyLimit, rateLimiter, async (c) => {
     return c.json({ error: '画像サイズが大きすぎます（5MB以内）' }, 400)
   }
 
-  const content: Array<
-    | { type: 'text'; text: string }
-    | { type: 'image_url'; image_url: { url: string } }
-  > = []
-
-  if (imageUrl) {
-    content.push({ type: 'image_url', image_url: { url: imageUrl } })
-  }
-  if (text) {
-    content.push({ type: 'text', text })
-  }
+  // 準備
+  const content = imageUrl
+    ? { type: 'image_url' as const, image_url: { url: imageUrl } }
+    : { type: 'text' as const, text: text! }
 
   const messages = [
     new SystemMessage(SYSTEM_PROMPT),
-    new HumanMessage({ content })
+    new HumanMessage({ content: [content] })
   ]
 
+  // 送信
   const startTime = Date.now()
   return streamSSE(c, async (stream) => {
     log(ip, 'LLM request start')
