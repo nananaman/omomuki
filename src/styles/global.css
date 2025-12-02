@@ -482,6 +482,8 @@ body {
   color: var(--sumi-light);
   line-height: 2;
   padding: var(--space-sm) 0;
+  overflow-wrap: break-word;
+  word-break: break-all;
 }
 
 .input-display-image {
@@ -514,6 +516,8 @@ body {
   line-height: 2;
   color: var(--sumi);
   font-weight: 300;
+  overflow-wrap: break-word;
+  word-break: break-all;
 }
 
 .summary-text.loading::after {
@@ -592,6 +596,8 @@ body {
   color: var(--sumi);
   margin-bottom: 2px;
   letter-spacing: 0.05em;
+  overflow-wrap: break-word;
+  word-break: break-all;
 }
 
 .omomuki-type {
@@ -613,6 +619,8 @@ body {
   color: var(--sumi-light);
   line-height: 1.9;
   font-weight: 300;
+  overflow-wrap: break-word;
+  word-break: break-all;
 }
 
 .loading-cursor {
